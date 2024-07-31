@@ -1,0 +1,17 @@
+.grid-container{
+    width: 80%;
+    height: 100%;
+    margin: auto;
+    display: grid;
+    grid-template-columns: auto auto auto auto;
+    color: white;
+    justify-content: space-around;
+    padding: 1.5rem 1rem;
+    gap: 1rem;
+  
+}
+@media (max-width: 740px) {
+    .grid-container {
+        grid-template-columns: auto auto;
+    }
+}

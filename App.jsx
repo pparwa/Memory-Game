@@ -1,44 +1,64 @@
 //import { useState } from 'react'
-import NumberBox from './components/NumberBox'
-import KeyPage from './components/KeyPage'
+
+import { useEffect, useState } from 'react';
 import './App.css'
-import   { useState } from 'react'
+import CardContainer from './components/CardContainer';
+  const ImageArr = [
+    { src: "image/helmet-1.png", match: false },
+    { src: "image/scroll-1.png", match: false },
+    { src: "image/potion-1.png", match: false },
+    { src: "image/shield-1.png", match: false },
+    { src: "image/ring-1.png", match: false },
+    { src: "image/sword-1.png", match: false },
+  ];
+
 function App() {
-  const [ conclusion , setconclusion] = useState('')
-  const [numbers , setnumbers] = useState([]) 
-
- const handelnumber = (value)=>{
-  setnumbers([...numbers,value])
+  const [CardS , SetCards] = useState([])
+  const [ChoiceOne , setChoiceOne] = useState()
+  const [ChoiceTwo, setChoiceTwo] = useState();
+  const [Turns , setTurns] = useState(0)
+  const handelChoice =(card)=>{
+    ChoiceOne ? setChoiceTwo(card) : setChoiceOne(card)
+    
+  }
+ const ShuffeldCard= ()=>{
+  const newArr = [...ImageArr , ...ImageArr]
+const shuffeld = newArr.sort(()=>Math.random() - 0.5).map(card=>({...card ,id:Math.floor((Math.random() *1000))}))
+  SetCards(shuffeld)
  }
- const handelsum = ()=>{
-  console.log("iam diffren")
-  const result = numbers.join("").split((/(\D)/g)).map((value)=>value.match(/\d/g) ? parseInt(value) : value).reduce((acc,value,index,array)=>{
-    switch(value){
-
-      case '+':
-        return (acc = acc + array[index + 1])
-      case '-':
-        return (acc = acc - array[index + 1]);
-      case '*':
-         return (acc = acc * array[index + 1]);
-      case '/':
-           return (acc = acc / array[index + 1]);
-       default:
-            return acc
-    }
-  })
-  setconclusion(result)
-  
- 
- }
+useEffect(()=>{
+if (ChoiceOne && ChoiceTwo) {
+  if (ChoiceOne.src == ChoiceTwo.src) {
+    const matchCards = [...CardS];
+    const newcards = matchCards.map((card) => {
+      if (ChoiceOne.src == card.src) {
+        return { ...card, match: true };
+      } else {
+        return card;
+      }
+    });
+    SetCards(newcards);
+    console.log(newcards)
+  } else {
+    setTurns((prev) => prev + 1);
+    setTimeout(() => {
+      setChoiceOne(null);
+      setChoiceTwo(null);
+    }, 1000);
+  }
+}
+console.log('thuk')
+},[ChoiceOne , ChoiceTwo])
+console.log(ChoiceOne , ChoiceTwo)
   return (
     <>
-<div className='container'>
-  <NumberBox result={conclusion}/>
-  <KeyPage   handelnumber={handelnumber} handelsum={handelsum}/>
-</div>
+      <div className="title-box">
+        <h1 className="title">Memory Card</h1>
+        <button className="btn-start" onClick={ShuffeldCard}>New Game</button>
+      </div>
+      <CardContainer  Cards={CardS} handelChoice={handelChoice} choiceone={ChoiceOne} choicetwo={ChoiceTwo}/>
     </>
-  )
+  );
 }
 
 export default App
